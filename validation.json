@@ -1,0 +1,67 @@
+{
+  "app": {
+    "package": "local.ireader.keyripple",
+    "version": "1.1",
+    "version_code": 2,
+    "sha256": "e523115f9fe144ee7f213d98644602cf25cf582a4acc6c223eb4fbd3590cf770"
+  },
+  "device": {
+    "model": "Ocean 6 Pro",
+    "android": "14",
+    "api": 34
+  },
+  "package_selection": "user_selected_foreground_packages; no activity restrictions",
+  "upgrade": {
+    "service_grant_preserved": true,
+    "automatically_rebound": true,
+    "previous_effect_and_speed_preserved": true,
+    "legacy_qidian_selection_migrated": true
+  },
+  "integration": {
+    "search_exact_package": "passed",
+    "multi_select_saved": [
+      "com.qidian.eink",
+      "com.szzy.ireader.ink.calculator"
+    ],
+    "selected_non_qidian_physical_keys": {
+      "package": "com.szzy.ireader.ink.calculator",
+      "before": 12,
+      "after": 14,
+      "passed": true
+    },
+    "virtual_keys_and_touch_counter": 14,
+    "virtual_and_touch_ignored": true,
+    "unselected_application": {
+      "package": "com.android.settings",
+      "counter": 14,
+      "passed": true
+    },
+    "logs": [
+      "10-21 14:43:20.349  4536  4536 I OceanRippleService: TURN 13 package=com.szzy.ireader.ink.calculator key=24 scan=115 effect=2 elapsedMs=2 consumed=false",
+      "10-21 14:43:20.556  4536  4536 I OceanRippleService: TURN 14 package=com.szzy.ireader.ink.calculator key=25 scan=114 effect=1 elapsedMs=9 consumed=false"
+    ],
+    "app_list_counts": {
+      "default": 19,
+      "with_non_launcher": 149
+    },
+    "restored_selection": [
+      "com.qidian.eink"
+    ]
+  },
+  "user_visual_confirmation": {
+    "target": "com.qidian.eink",
+    "passed": true,
+    "reply": "正常，只有实体键有水波纹"
+  },
+  "standalone_background": {
+    "prior_v1_0_usb_disconnected_reboot_user_confirmed": true,
+    "v1_1_upgrade_rebind_confirmed": true,
+    "v1_1_reboot_retested": false
+  },
+  "all_apps_modes_speeds_rotations_visual_test": "not_exhaustively_tested",
+  "signature_verified": {
+    "v2": true,
+    "v3": true
+  },
+  "updated": "2026-10-21T14:45:10.416861+08:00"
+}

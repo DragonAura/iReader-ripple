@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">实体按键水波纹</string>
+    <string name="service_name">实体按键水波纹</string>
+    <string name="service_description">在你选择的应用处于前台时响应实体翻页键，触屏不触发动效。系统负责保持服务连接。助手不读取窗口正文，不发送网络数据，也不代替你操作屏幕。</string>
+</resources>
