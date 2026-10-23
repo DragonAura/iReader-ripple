@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -36,6 +37,7 @@ public final class MainActivity extends Activity {
         TextView intro=text("在你选择的应用中响应实体翻页键。触屏和自动翻页不触发助手动效。",18);
         intro.setPadding(0,dp(16),0,dp(14));column.addView(intro);
         status=text("",18);column.addView(status);
+        addButton(column,"授权引导 / 受限设置",new View.OnClickListener(){public void onClick(View v){showAuthorizationGuide();}});
         addButton(column,"开启 / 管理无障碍监听",new View.OnClickListener(){public void onClick(View v){openAccessibility();}});
         targets=addButton(column,"",new View.OnClickListener(){public void onClick(View v){
             startActivity(new Intent(MainActivity.this,AppSelectionActivity.class));
@@ -53,7 +55,7 @@ public final class MainActivity extends Activity {
             p.edit().putInt("speed",(p.getInt("speed",0)+1)%3).apply();update();
         }});
         addButton(column,"打开已选应用",new View.OnClickListener(){public void onClick(View v){openTarget();}});
-        TextView note=text("应用可以多选，保存后立即生效。已选应用的全部界面都会响应实体翻页键；应用本身需要支持按键翻页并更新画面。\n\n开启服务后，无需连接电脑。首次若显示“受限设置”，请到应用信息中允许受限设置，再开启服务。",16);
+        TextView note=text("应用可以多选，保存后立即生效。已选应用的全部界面都会响应实体翻页键；应用本身需要支持按键翻页并更新画面。\n\n开启服务后，无需连接电脑。首次若显示“受限设置”，请点“授权引导 / 受限设置”查看操作步骤。",16);
         note.setPadding(0,dp(20),0,0);column.addView(note);
         setContentView(scroll);update();
     }
@@ -80,12 +82,32 @@ public final class MainActivity extends Activity {
         if(intent==null)Toast.makeText(this,"这个应用没有桌面入口，请自行打开",Toast.LENGTH_LONG).show();
         else startActivity(intent);
     }
+    private void showAuthorizationGuide(){
+        new AlertDialog.Builder(this).setTitle("无障碍授权引导")
+            .setMessage("若系统提示“受限设置”：\n\n1. 点“打开应用信息”。\n2. 如右上角“⋮”菜单中有“允许受限设置”，请点击并按系统提示确认。\n3. 返回本应用，再点“开启 / 管理无障碍监听”开启服务。\n\n不同固件的入口和名称可能不同；没有该菜单可先尝试开启无障碍。若仍提示受限且没有此入口，可能是设备固件隐藏了设置，请联系设备厂商。")
+            .setPositiveButton("打开应用信息",new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface d,int which){openAppDetails();}
+            })
+            .setNeutralButton("前往无障碍",new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface d,int which){openAccessibility();}
+            })
+            .setNegativeButton("取消",null).show();
+    }
+    private void openAppDetails(){
+        Intent intent=new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package",getPackageName(),null));
+        if(!tryOpenSettings(intent) && !tryOpenSettings(new Intent(Settings.ACTION_APPLICATION_SETTINGS)))
+            Toast.makeText(this,"无法打开应用信息，请在系统设置的应用列表中找到本应用",Toast.LENGTH_LONG).show();
+    }
     private void openAccessibility(){
-        try{
-            Intent intent=new Intent("android.settings.ACCESSIBILITY_DETAILS_SETTINGS");
-            intent.putExtra("android.intent.extra.COMPONENT_NAME",new ComponentName(this,RippleService.class));
-            startActivity(intent);
-        }catch(Exception error){startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));}
+        Intent intent=new Intent("android.settings.ACCESSIBILITY_DETAILS_SETTINGS");
+        intent.putExtra("android.intent.extra.COMPONENT_NAME",new ComponentName(this,RippleService.class));
+        if(!tryOpenSettings(intent) && !tryOpenSettings(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)))
+            Toast.makeText(this,"无法打开无障碍页面，请在系统设置中进入无障碍并开启本服务",Toast.LENGTH_LONG).show();
+    }
+    private boolean tryOpenSettings(Intent intent){
+        try{startActivity(intent);return true;}
+        catch(Exception error){return false;}
     }
     private void update(){
         if(status==null)return;
